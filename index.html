@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Star Wars RPG</title>
+
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Added link to the jQuery library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <header>
+        <h1>Star Wars RPG</h1>
+    </header>
+    <main>
+        <div class="char-box box1">
+            <h2>Obi-Wan Kenobi</h2>
+            <img id="img1" src="assets/images/yoda.jpg">
+            <h2 id="hp1"></h2>
+        </div>
+        <div class="char-box box2">
+            <h2>Yoda</h2>
+            <img id="img2" src="assets/images/yoda.jpg">
+            <h2 id="hp2"></h2>
+        </div>
+        <div class="char-box box3">
+            <h2>Jar Jar Binks</h2>
+            <img id="img3" src="assets/images/yoda.jpg">
+            <h2 id="hp3"></h2>
+        </div>
+        <div class="char-box box4">
+            <h2>Jabba The Hutt</h2>
+            <img id="img4" src="assets/images/yoda.jpg">
+            <h2 id="hp4"></h2>
+        </div>
+
+        <button id="btn-attack">Attack</button>
+        <button id="btn-restart">Restart</button>
+        <div id="message-box">
+            <p id="message1"></p>
+            <p id="message2"></p>
+        </div>
+    </main>
+
+
+    <script src="assets/javascript/data.js"></script>
+    <script src="assets/javascript/game.js"></script>
+</body>
+</html>
