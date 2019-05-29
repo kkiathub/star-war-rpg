@@ -47,6 +47,25 @@ function initializeScreenOffset() {
     $("#lb-defender").css("left", enemyPosX);
     $("#lb-enemies").css("left", enemyBackX);
 }
+function resetCharacters() {
+
+    var idlist = [0,1,2,3];
+    var powerIdx;
+
+    for(var i=0; i<characters.length; i++) {
+        powerIdx = Math.floor(Math.random()*idlist.length);
+        characters[i].maxhp = powerAttrSet[idlist[powerIdx]].maxhp;
+        characters[i].attack = powerAttrSet[idlist[powerIdx]].atk;
+        characters[i].counter = powerAttrSet[idlist[powerIdx]].counter;
+        idlist.splice(powerIdx, 1);
+    }
+
+}
+
+function resetGame() {
+    resetCharacters();
+    screenReset();
+}
 
 function screenReset() {
     var posX = charPosX;
@@ -192,7 +211,7 @@ function enemyDefeated() {
     if (boxId<0) {
         return;
     }
-    $(".box"+ boxId).hide();
+    $(".box"+ boxId).fadeOut();
 
     game.numEnemies--;
     if (game.numEnemies <=0) {
@@ -247,6 +266,7 @@ $("#btn-attack").on("click", function() {
     // enemy.hp -= yourchar.attack;
     enemy.hp -= game.charPower;
     if (enemy.hp <=0) {
+        game.charPower += yourchar.attack;
         enemyDefeated();
         return;
     }
@@ -264,9 +284,9 @@ $("#btn-attack").on("click", function() {
 });
 
 $("#btn-restart").on("click", function() {
-    screenReset();
+    resetGame();
 });
 
 // start calling functions here.
     initializeScreenOffset();
-    screenReset();
+    resetGame();
