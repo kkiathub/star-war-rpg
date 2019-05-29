@@ -46,9 +46,17 @@ h2 {
     top: 0px;
 }
 
+#btn-attack, #btn-restart {
+    width: 80px;
+    padding: 10px;
+    border-radius: 10px;
+
+}
+
 #btn-attack, #btn-restart, #message-box {
     position: absolute;
 }
+
 #message-box {
     background-color: black;
     color: white;

@@ -55,18 +55,20 @@ function screenReset() {
 
 function messageBoxReset() {
     var posY = YOFFSET + $("header").outerHeight() + $(".box1").outerHeight() + 30;
+    var restartX = XOFFSET + $("#btn-attack").outerWidth() + 10;
 
     $("#btn-attack").css({top: posY, left: XOFFSET}); 
-    $("#btn-restart").css({top: posY, left: XOFFSET});
+    $("#btn-restart").css({top: posY, left: restartX});
 
     posY += ($("#btn-attack").outerHeight() + 15);
 
     $("#message-box").css({top: posY, left: XOFFSET}); 
 
-    $("#btn-attack").hide();
-    $("#btn-restart").hide();
+    $("#btn-attack").attr("disabled", true);
+    $("#btn-restart").attr("disabled", true);
 
     $("#message1").text("Choose your character.");
+    $("#message2").text("");
 }
 
 function screenSplitSide() {
@@ -128,7 +130,8 @@ function screenEnemyReady() {
 
 function readyToAttack() {
     $("#message1").text("Ready to attack!");
-    $("#btn-attack").show();
+    $("#message2").text("");
+    $("#btn-attack").attr("disabled", false);
 } 
 
 function getBoxId(id) {
@@ -165,8 +168,8 @@ function gameFinished(youwin) {
         $("#message1").text("You have been defeated! GAME OVER!!!");
     }
     $("#message2").text("press RESTART to play again!");
-    $("#btn-attack").hide();
-    $("#btn-restart").show();
+    $("#btn-attack").attr("disabled", true);
+    $("#btn-restart").attr("disabled", false);
 }
 
 function enemyDefeated() {
@@ -201,6 +204,7 @@ $(".char-box").on("click", function() {
             game.state      = GAMESTATE.CHAR_SELECTED;
             screenSplitSide();
             $("#message1").text("Choose your enemy!");
+            $("#message2").text("");
             break;
         case GAMESTATE.CHAR_SELECTED:
             if (game.charPicked == charId) {
@@ -227,6 +231,7 @@ $("#btn-attack").on("click", function() {
     }
 
     var yourchar = characters[game.charPicked];
+
     var enemy = characters[game.enemyPicked];
     enemy.hp -= yourchar.attack;
     if (enemy.hp <=0) {
