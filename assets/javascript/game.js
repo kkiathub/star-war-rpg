@@ -18,6 +18,8 @@ var game = {
     charPicked: -1,
     enemyPicked: -1,
 
+    charPower: -1, // current attack power
+
     reset: function() {
         this.state  = GAMESTATE.NONE;
         charPicked  = -1;
@@ -28,18 +30,33 @@ var game = {
 // game object definition ends here.
 
 // functions are defines here.
+var charPosX, enemyPosX, enemyBackX;
+var charPosY;
+
+function initializeScreenOffset() {
+    charPosX = XOFFSET;
+    charPosY = $("header").outerHeight() + $("h3").outerHeight() + YOFFSET;
+
+    var boxWidth    = $(".box1").outerWidth();
+    var boxHeight   = $(".box1").outerHeight();
+
+    enemyPosX   = charPosX + (boxWidth * 3) - 20;
+    enemyBackX  = charPosX + (boxWidth * 4);
+
+    $("#lb-char").css("left", charPosX);
+    $("#lb-defender").css("left", enemyPosX);
+    $("#lb-enemies").css("left", enemyBackX);
+}
 
 function screenReset() {
-    var defTop = $("header").outerHeight() + YOFFSET;
-    var spaceWidth = XOFFSET;
-    var boxElem ;
-    var boxWidth = $(".box1").outerWidth() + spaceWidth;
-    var posX = spaceWidth;
+    var posX = charPosX;
+    var posY = charPosY;
+    var boxWidth = $(".box1").outerWidth() + XOFFSET;
     for(var i=0; i<characters.length; i++) {
         boxElem = $(".box"+(i+1));
         boxElem.css("background-color","white");
         boxElem.css("border-color","green");
-        boxElem.css({top: defTop, left: posX}); 
+        boxElem.css({top: posY, left: posX}); 
         boxElem.attr("value",i);
         boxElem.show();
         posX += boxWidth;
@@ -50,19 +67,21 @@ function screenReset() {
     }
     game.reset();
 
+    $("h3").hide();
+
     messageBoxReset();
 }
 
 function messageBoxReset() {
-    var posY = YOFFSET + $("header").outerHeight() + $(".box1").outerHeight() + 30;
-    var restartX = XOFFSET + $("#btn-attack").outerWidth() + 10;
+    var posY     = charPosY + $(".box1").outerHeight() + 30;
+    var restartX = charPosX + $("#btn-attack").outerWidth() + 10;
 
-    $("#btn-attack").css({top: posY, left: XOFFSET}); 
+    $("#btn-attack").css({top: posY, left: charPosX}); 
     $("#btn-restart").css({top: posY, left: restartX});
 
     posY += ($("#btn-attack").outerHeight() + 15);
 
-    $("#message-box").css({top: posY, left: XOFFSET}); 
+    $("#message-box").css({top: posY, left: charPosX}); 
 
     $("#btn-attack").attr("disabled", true);
     $("#btn-restart").attr("disabled", true);
@@ -72,13 +91,8 @@ function messageBoxReset() {
 }
 
 function screenSplitSide() {
-    var startY  = $("header").outerHeight() + YOFFSET;
-    var charX   = XOFFSET;
-    var boxElem = $(".box1");
-    var boxWidth = boxElem.outerWidth();
-    var boxHeight = boxElem.outerHeight();
-    var enemyX  = XOFFSET + (boxWidth * 4);
-    var enemyY  = startY;
+    var boxHeight = $(".box1").outerHeight();
+    var enemyY  = charPosY;
 
     var charId;
 
@@ -88,26 +102,23 @@ function screenSplitSide() {
         charId = boxElem.attr("value");
 
         if (game.charPicked == charId) {
-            boxElem.animate({ top: startY+"px", left: charX+"px" }, "normal");
+            boxElem.animate({ top: charPosY+"px", left: charPosX+"px" }, "normal");
         } else {
-            boxElem.animate({ top: enemyY+"px", left: enemyX+"px" }, "normal");
+            boxElem.animate({ top: enemyY+"px", left: enemyBackX+"px" }, "normal");
             boxElem.css("background-color","darkred");
             boxElem.css("border-color","black");
-            enemyY += (boxHeight + YOFFSET);
+            enemyY += (boxHeight + 10);
             game.numEnemies++;
         }
     }
+
+    $("h3").show();
+
 }
 
 function screenEnemyReady() {
-    var startY  = $("header").outerHeight() + YOFFSET;
-    var boxElem = $(".box1");
-    var boxWidth = boxElem.outerWidth();
-    var boxHeight = boxElem.outerHeight();
-    var enemyFrontX  = XOFFSET + (boxWidth * 3) - 20;
-    var enemyX  = XOFFSET + (boxWidth * 4);
-    var enemyY  = startY;
-
+    var boxHeight = $(".box1").outerHeight();
+    var enemyY  = charPosY;
     var charId;
 
     for (var i=1; i<=4; i++) {
@@ -115,13 +126,13 @@ function screenEnemyReady() {
         charId = boxElem.attr("value");
         if (charId != game.charPicked) {
             if (charId == game.enemyPicked) {
-                boxElem.animate({ top: startY, left: enemyFrontX+"px" }, "normal");
+                boxElem.animate({ top: charPosY, left: enemyPosX+"px" }, "normal");
                 boxElem.css("background-color","red");
                 boxElem.css("border-color","green");
             } else {
                 if ( $(boxElem).is(":visible") ) {
-                    boxElem.animate({ top: enemyY+"px", left: enemyX+"px" }, "normal");
-                    enemyY += (boxHeight + YOFFSET);
+                    boxElem.animate({ top: enemyY+"px", left: enemyBackX+"px" }, "normal");
+                    enemyY += (boxHeight + 10);
                 }
             }
         }
@@ -201,6 +212,7 @@ $(".char-box").on("click", function() {
     switch (game.state) {
         case GAMESTATE.NONE:
             game.charPicked = charId;
+            game.charPower  = characters[charId].attack;
             game.state      = GAMESTATE.CHAR_SELECTED;
             screenSplitSide();
             $("#message1").text("Choose your enemy!");
@@ -231,18 +243,20 @@ $("#btn-attack").on("click", function() {
     }
 
     var yourchar = characters[game.charPicked];
-
     var enemy = characters[game.enemyPicked];
-    enemy.hp -= yourchar.attack;
+    // enemy.hp -= yourchar.attack;
+    enemy.hp -= game.charPower;
     if (enemy.hp <=0) {
         enemyDefeated();
         return;
     }
     yourchar.hp -= enemy.counter;
-    $("#message1").text("You attack " + enemy.name + " for " + yourchar.attack + " damage.");
+    // $("#message1").text("You attack " + enemy.name + " for " + yourchar.attack + " damage.");
+    $("#message1").text("You attack " + enemy.name + " for " + game.charPower + " damage.");
     $("#message2").text(enemy.name + " attack you back for " + enemy.counter + " damage.");
     updateHP(game.charPicked);
     updateHP(game.enemyPicked);
+    game.charPower += yourchar.attack;
     if (yourchar.hp <= 0) {
         grayOutImage(game.charPicked);
         gameFinished(false);
@@ -253,5 +267,6 @@ $("#btn-restart").on("click", function() {
     screenReset();
 });
 
-    // call once!
+// start calling functions here.
+    initializeScreenOffset();
     screenReset();

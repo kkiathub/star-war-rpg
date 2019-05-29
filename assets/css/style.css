@@ -14,13 +14,32 @@ h1 {
     font-weight: bold;
 }
 
+h2 {
+    padding: 5px 0px;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: bold;
+    display: inline;
+    position: absolute;
+}
+#lb-char {
+    color: white;
+}
+
+#lb-defender {
+    color: darkorange;
+}
+
+#lb-enemies {
+    color: darkgreen;
+}
+
 img {
     width: 95%;
 }
 
-h2 {
-    padding: 5px 0px;
-}
 .char-box {
     width: 150px;
     text-align: center;
