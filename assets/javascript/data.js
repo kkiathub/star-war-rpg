@@ -1,10 +1,10 @@
 var gImgPath = "assets/images/"
 
 const powerAttrSet = [
-    { maxhp:100, atk:15, counter:6 },
-    { maxhp:120, atk:10, counter:12 },
-    { maxhp:150, atk:7, counter:20 },
-    { maxhp:180, atk:3, counter:25 },
+    { maxhp:100, atk:13, counter:6 },
+    { maxhp:120, atk:9, counter:10 },
+    { maxhp:150, atk:6, counter:18 },
+    { maxhp:165, atk:3, counter:25 },
 ];
 
 var characters = [
